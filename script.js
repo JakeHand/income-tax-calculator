@@ -1,4 +1,4 @@
-let calculateButton = document.querySelector('button');
+let form = document.querySelector('form');
 
 const taxPayable = function() {
     let taxableIncome = document.getElementById('input').value;
@@ -15,13 +15,12 @@ const taxPayable = function() {
     } else if (taxableIncome > 180000) {
         incomeTax = 51667 + (taxableIncome - 180000) * 0.45;
     }
-    
+
     return incomeTax.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-const addResponse = function() {
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
     let response = document.querySelector('p');
     response.innerHTML = 'Your income tax payable for 2022/23 is estimated to be $' + taxPayable();
-}
-
-calculateButton.addEventListener('click', addResponse);
+});
