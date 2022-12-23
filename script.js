@@ -16,7 +16,7 @@ const taxPayable = function() {
         incomeTax = 51667 + (taxableIncome - 180000) * 0.45;
     }
 
-    return incomeTax;
+    return incomeTax.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 const addResponse = function() {
