@@ -15,7 +15,23 @@ const incomeTax = function() {
         incomeTax += 51667 + (taxableIncome - 180000) * 0.45;
     }
 
-    return incomeTax;
+    return Math.round(incomeTax * 100) / 100;
+}
+
+// Low Income Tax Offset
+const lito = function() {
+    let taxableIncome = document.getElementById('input').value;
+    let lito = 0;
+    
+    if (taxableIncome > 0 && taxableIncome <= 37500) {
+        lito = 700;
+    } else if (taxableIncome > 37500 && taxableIncome <= 45000) {
+        lito = 700 - ((taxableIncome - 37500) * 0.05);
+    } else if (taxableIncome > 45000 && taxableIncome <= 66667) {
+        lito = 325 - ((taxableIncome - 45000) * 0.015);
+    }
+
+    return Math.round(lito * 100) / 100;
 }
 
 // Medicare Levy
@@ -29,18 +45,36 @@ const medicareLevy = function() {
         medicareLevy += taxableIncome * 0.02;
     }
 
-    return medicareLevy;
+    return Math.round(medicareLevy * 100) / 100;
 }
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
 
+    // Income Tax Payable
     let incomeTaxString = incomeTax().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    document.getElementById('income-tax').innerHTML = 'Your income tax payable for 2022/23 is estimated to be $' + incomeTaxString;
+    document.getElementById('income-tax').innerHTML = 'Income tax payable: $' + incomeTaxString;
 
+    // Low Income Tax Offset
+    let litoString = lito().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    document.getElementById('lito').innerHTML = 'Low income tax offset: $' + litoString;
+
+    // Income tax after subtracting tax offsets
+    let incomeLito = incomeTax() - lito();
+    let incomeLitoString = incomeLito.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (incomeLito < 0) {
+        incomeLito = 0;
+        document.getElementById('income-lito').innerHTML = 'Income tax liability after subtracting tax offsets: $0';
+    } else {
+        document.getElementById('income-lito').innerHTML = 'Income tax liability after subtracting tax offsets: $' + incomeLitoString;
+    }
+
+    // Medicare Levy Payable
     let medicareLevyString = medicareLevy().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    document.getElementById('medicare-levy').innerHTML = 'You will pay $' + medicareLevyString + ' in medicare levy';
+    document.getElementById('medicare-levy').innerHTML = 'Medicare levy payable: $' + medicareLevyString;
 
-    let totalTax = incomeTax() + medicareLevy();
-    document.getElementById('total').innerHTML = 'Total = $' + totalTax;
+    // Total Tax Payable
+    let totalTax = incomeLito + medicareLevy();
+    totalTax = totalTax.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    document.getElementById('total').innerHTML = 'Total tax liability: $' + totalTax;
 });
