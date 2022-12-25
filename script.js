@@ -18,7 +18,7 @@ const incomeTax = function() {
     return Math.round(incomeTax * 100) / 100;
 }
 
-// Low Income Tax Offset
+// Low Income Tax Offset (LITO)
 const lito = function() {
     let taxableIncome = document.getElementById('input').value;
     let lito = 0;
@@ -32,6 +32,25 @@ const lito = function() {
     }
 
     return Math.round(lito * 100) / 100;
+}
+
+// Low & Middle Income Tax Offset (LMITO)
+const lmito = function() {
+    let taxableIncome = document.getElementById('input').value;
+    let lmito = 0;
+    
+    if (taxableIncome <= 37000) {
+        lmito = 675;
+    } else if (taxableIncome > 37000 && taxableIncome <= 48000) {
+        lmito = 675 + ((taxableIncome - 37000) * 0.075);
+    } else if (taxableIncome > 48000 && taxableIncome <= 90000) {
+        lmito = 1500;
+    }
+     else if (taxableIncome > 90000 && taxableIncome < 126000) {
+        lmito = 1500 - ((taxableIncome - 90000) * 0.03);
+     }
+
+     return Math.round(lmito * 100) / 100;
 }
 
 // Medicare Levy
@@ -59,14 +78,18 @@ form.addEventListener('submit', (e) => {
     let litoString = lito().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     document.getElementById('lito').innerHTML = 'Low income tax offset: $' + litoString;
 
-    // Income tax after subtracting tax offsets
-    let incomeLito = incomeTax() - lito();
-    let incomeLitoString = incomeLito.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    if (incomeLito < 0) {
-        incomeLito = 0;
-        document.getElementById('income-lito').innerHTML = 'Income tax liability after subtracting tax offsets: $0';
+    // Low & Middle Income Tax Offset
+    let lmitoString = lmito().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    document.getElementById('lmito').innerHTML = 'Low and middle income tax offset: $' + lmitoString;
+
+    // Income Tax After Subtracting Tax Offsets
+    let incomeOffsets = incomeTax() - lito() - lmito();
+    let incomeOffsetsString = incomeOffsets.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (incomeOffsets < 0) {
+        incomeOffsets = 0;
+        document.getElementById('income-offsets').innerHTML = 'Income tax liability after subtracting tax offsets: $0';
     } else {
-        document.getElementById('income-lito').innerHTML = 'Income tax liability after subtracting tax offsets: $' + incomeLitoString;
+        document.getElementById('income-offsets').innerHTML = 'Income tax liability after subtracting tax offsets: $' + incomeOffsetsString;
     }
 
     // Medicare Levy Payable
@@ -74,7 +97,7 @@ form.addEventListener('submit', (e) => {
     document.getElementById('medicare-levy').innerHTML = 'Medicare levy payable: $' + medicareLevyString;
 
     // Total Tax Payable
-    let totalTax = incomeLito + medicareLevy();
+    let totalTax = incomeOffsets + medicareLevy();
     totalTax = totalTax.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     document.getElementById('total').innerHTML = 'Total tax liability: $' + totalTax;
 });
