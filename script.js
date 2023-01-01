@@ -104,6 +104,6 @@ form.addEventListener('submit', (e) => {
     // Total Tax Payable
     let totalTax = incomeOffsets + medicareLevy();
     totalTax = totalTax.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    document.getElementById('total-text').innerHTML = 'Total tax liability';
+    document.getElementById('total-text').innerHTML = 'Estimated total tax liability';
     document.getElementById('total').innerHTML = '$' + totalTax;
 });
