@@ -72,32 +72,38 @@ form.addEventListener('submit', (e) => {
 
     // Income Tax Payable
     let incomeTaxString = incomeTax().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    document.getElementById('income-tax').innerHTML = 'Income tax payable: $' + incomeTaxString;
+    document.getElementById('income-tax-text').innerHTML = 'Income tax payable';
+    document.getElementById('income-tax').innerHTML = '$' + incomeTaxString;
 
     // Low Income Tax Offset
     let litoString = lito().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    document.getElementById('lito').innerHTML = 'Low income tax offset: $' + litoString;
+    document.getElementById('lito-text').innerHTML = 'Low income tax offset';
+    document.getElementById('lito').innerHTML = '$' + litoString;
 
     // Low & Middle Income Tax Offset
     let lmitoString = lmito().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    document.getElementById('lmito').innerHTML = 'Low and middle income tax offset: $' + lmitoString;
+    document.getElementById('lmito-text').innerHTML = 'Low and middle income tax offset';
+    document.getElementById('lmito').innerHTML = '$' + lmitoString;
 
     // Income Tax After Subtracting Tax Offsets
+    document.getElementById('income-offsets-text').innerHTML = 'Income tax liability after subtracting tax offsets';
     let incomeOffsets = incomeTax() - lito() - lmito();
     let incomeOffsetsString = incomeOffsets.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     if (incomeOffsets < 0) {
         incomeOffsets = 0;
-        document.getElementById('income-offsets').innerHTML = 'Income tax liability after subtracting tax offsets: $0';
+        document.getElementById('income-offsets').innerHTML = '$0';
     } else {
-        document.getElementById('income-offsets').innerHTML = 'Income tax liability after subtracting tax offsets: $' + incomeOffsetsString;
+        document.getElementById('income-offsets').innerHTML = '$' + incomeOffsetsString;
     }
 
     // Medicare Levy Payable
     let medicareLevyString = medicareLevy().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    document.getElementById('medicare-levy').innerHTML = 'Medicare levy payable: $' + medicareLevyString;
+    document.getElementById('medicare-levy-text').innerHTML = 'Medicare levy payable';
+    document.getElementById('medicare-levy').innerHTML = '$' + medicareLevyString;
 
     // Total Tax Payable
     let totalTax = incomeOffsets + medicareLevy();
     totalTax = totalTax.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    document.getElementById('total').innerHTML = 'Total tax liability: $' + totalTax;
+    document.getElementById('total-text').innerHTML = 'Total tax liability';
+    document.getElementById('total').innerHTML = '$' + totalTax;
 });
