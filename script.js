@@ -23,7 +23,7 @@ const lito = function() {
     let taxableIncome = document.getElementById('input').value;
     let lito = 0;
     
-    if (taxableIncome > 0 && taxableIncome <= 37500) {
+    if (taxableIncome <= 37500) {
         lito = 700;
     } else if (taxableIncome > 37500 && taxableIncome <= 45000) {
         lito = 700 - ((taxableIncome - 37500) * 0.05);
